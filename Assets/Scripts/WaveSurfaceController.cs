@@ -6,8 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class WaveSurfaceController : MonoBehaviour
 {
-    const int kWidth = 101;
-    const int kHeight = kWidth;
+    public const int kWidth = 101;
+    public const int kHeight = kWidth;
+    public const float kGap = 1f;
 
     Mesh m_mesh;
     Vector3[] m_vertices;
@@ -25,7 +26,6 @@ public class WaveSurfaceController : MonoBehaviour
         {
             for (int j = 0; j < kHeight; ++j)
             {
-                const float kGap = 1f;
                 Vector3 v = new Vector3(i * kGap, 0, j * kGap);
                 m_vertices[XYtoI(i, j)] = v;
             }
@@ -46,12 +46,12 @@ public class WaveSurfaceController : MonoBehaviour
                     int vbi3 = vbi2 - 1;
 
                     triangles[index    ] = vbi0;
-                    triangles[index + 1] = vbi1;
-                    triangles[index + 2] = vbi3;
+                    triangles[index + 1] = vbi3;
+                    triangles[index + 2] = vbi1;
 
                     triangles[index + 3] = vbi3;
-                    triangles[index + 4] = vbi1;
-                    triangles[index + 5] = vbi2;
+                    triangles[index + 4] = vbi2;
+                    triangles[index + 5] = vbi1;
 
                     index += 6;
                 }
@@ -64,7 +64,6 @@ public class WaveSurfaceController : MonoBehaviour
         {
             m_colors[i] = Color.white;
         }
-
 
         m_mesh.vertices = m_vertices;
         m_mesh.triangles = triangles;
