@@ -21,19 +21,19 @@ public class SimulatorController : MonoBehaviour
         public BlockType bt;
     }
 
-    //struct WaveSource
-    //{
-    //    public int u;
-    //    public int v;
-    //    public float theta;
-    //    public float omega;
-    //    public float amp;
-    //}
+    class WaveSource
+    {
+        public int u;
+        public int v;
+        public float theta;
+        public float omega;
+        public float amp;
+    }
 
 
     WaveSurfaceController m_wsc;
     Unit[,] m_units;
-    //List<WaveSource> m_waveSources;
+    List<WaveSource> m_waveSources;
 
 
     // Start is called before the first frame update
@@ -41,6 +41,7 @@ public class SimulatorController : MonoBehaviour
     {
         m_wsc = GameObject.Find("WaveSurface").GetComponent<WaveSurfaceController>();
         m_units = new Unit[kWidth, kHeight];
+        m_waveSources = new List<WaveSource>();
 
         for (int i = 0; i < kWidth; ++i)
         {
@@ -63,8 +64,14 @@ public class SimulatorController : MonoBehaviour
             m_units[kWidth - 1, j].bt = BlockType.Fixed;
         }
 
-
-        m_units[kWidth / 2, kHeight / 2].y = 30f;
+        WaveSource ws = new WaveSource
+        {
+            u = kWidth / 2,
+            v = kHeight / 2,
+            omega = 0.1f,
+            amp = 10f
+        };
+        m_waveSources.Add(ws);
     }
 
     void FixedUpdate()
@@ -121,6 +128,13 @@ public class SimulatorController : MonoBehaviour
                     m_units[i, j].y += m_units[i, j].v;
                 }
             }
+        }
+
+        for (int i = 0; i < m_waveSources.Count; ++i)
+        {
+            WaveSource ws = m_waveSources[i];
+            m_units[ws.u, ws.v].y = ws.amp * Mathf.Sin(ws.theta);
+            ws.theta += ws.omega;
         }
     }
 
