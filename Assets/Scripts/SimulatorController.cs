@@ -63,21 +63,40 @@ public class SimulatorController : MonoBehaviour
             m_units[         0, j].bt = BlockType.Fixed;
             m_units[kWidth - 1, j].bt = BlockType.Fixed;
         }
+    }
 
-        WaveSource ws = new WaveSource
-        {
-            u = kWidth / 2,
-            v = kHeight / 2,
-            omega = 0.1f,
-            amp = 10f
-        };
-        m_waveSources.Add(ws);
+    void Update()
+    {
+        Set();
     }
 
     void FixedUpdate()
     {
         Move();
         Reflect();
+    }
+
+    void Set()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            // マウスの、波面上における位置を算出する
+            int u = -1, v = -1;
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    u = (int)Mathf.Round(hit.point.x);
+                    v = (int)Mathf.Round(hit.point.z);
+                }
+            }
+
+            if (InRange(u, v) && m_units[u, v].bt == BlockType.None)
+            {
+                m_units[u, v].v = 5;
+            }
+        }
     }
 
     void Move()
@@ -119,6 +138,7 @@ public class SimulatorController : MonoBehaviour
             }
         }
 
+        // 変位更新
         for (int i = 0; i < kWidth; ++i)
         {
             for (int j = 0; j < kHeight; ++j)
@@ -130,6 +150,7 @@ public class SimulatorController : MonoBehaviour
             }
         }
 
+        // 波源反映
         for (int i = 0; i < m_waveSources.Count; ++i)
         {
             WaveSource ws = m_waveSources[i];
