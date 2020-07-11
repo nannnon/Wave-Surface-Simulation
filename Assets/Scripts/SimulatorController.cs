@@ -118,15 +118,7 @@ public class SimulatorController : MonoBehaviour
                         // 波源
                         if (btIsNone)
                         {
-                            WaveSource ws = new WaveSource
-                            {
-                                u = u,
-                                v = v,
-                                theta = 0,
-                                omega = 0.1f,
-                                amp = 10
-                            };
-                            m_waveSources.Add(ws);
+                            AddWaveSource(u, v);
                         }
                         break;
 
@@ -148,6 +140,27 @@ public class SimulatorController : MonoBehaviour
                 }
             }
         }
+    }
+
+    void AddWaveSource(int u, int v)
+    {
+        foreach (WaveSource ws in m_waveSources)
+        {
+            if (ws.u == u && ws.v == v)
+            {
+                return;
+            }
+        }
+
+        WaveSource waveSource = new WaveSource
+        {
+            u = u,
+            v = v,
+            theta = 0,
+            omega = 0.1f,
+            amp = 10
+        };
+        m_waveSources.Add(waveSource);
     }
 
     void Move()
