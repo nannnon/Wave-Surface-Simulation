@@ -34,6 +34,7 @@ public class SimulatorController : MonoBehaviour
     WaveSurfaceController m_wsc;
     Unit[,] m_units;
     List<WaveSource> m_waveSources;
+    UnityEngine.UI.Dropdown m_addingType;
 
 
     // Start is called before the first frame update
@@ -42,6 +43,7 @@ public class SimulatorController : MonoBehaviour
         m_wsc = GameObject.Find("WaveSurface").GetComponent<WaveSurfaceController>();
         m_units = new Unit[kWidth, kHeight];
         m_waveSources = new List<WaveSource>();
+        m_addingType = GameObject.Find("AddingTypeDropdown").GetComponent<UnityEngine.UI.Dropdown>();
         Initialize();
     }
 
@@ -98,9 +100,52 @@ public class SimulatorController : MonoBehaviour
                 }
             }
 
-            if (InRange(u, v) && m_units[u, v].bt == BlockType.None)
+            if (InRange(u, v))
             {
-                m_units[u, v].v = 5;
+                bool btIsNone = (m_units[u, v].bt == BlockType.None);
+
+                switch (m_addingType.value)
+                {
+                    case 0:
+                        // 波
+                        if (btIsNone)
+                        {
+                            m_units[u, v].v = 2;
+                        }
+                        break;
+
+                    case 1:
+                        // 波源
+                        if (btIsNone)
+                        {
+                            WaveSource ws = new WaveSource
+                            {
+                                u = u,
+                                v = v,
+                                theta = 0,
+                                omega = 0.1f,
+                                amp = 10
+                            };
+                            m_waveSources.Add(ws);
+                        }
+                        break;
+
+                    case 2:
+                        // ブロック
+                        if (btIsNone)
+                        {
+                            m_units[u, v].bt = BlockType.Free;
+                        }
+                        break;
+
+                    case 3:
+                        // ブロック解除
+                        if (m_units[u, v].bt == BlockType.Free)
+                        {
+                            m_units[u, v].bt = BlockType.None;
+                        }
+                        break;
+                }
             }
         }
     }
@@ -141,6 +186,10 @@ public class SimulatorController : MonoBehaviour
                         }
                     }
                 }
+                else
+                {
+                    m_units[i, j].v = 0;
+                }
             }
         }
 
@@ -152,6 +201,10 @@ public class SimulatorController : MonoBehaviour
                 if (m_units[i, j].bt == BlockType.None)
                 {
                     m_units[i, j].y += m_units[i, j].v;
+                }
+                else
+                {
+                    m_units[i, j].y = 0;
                 }
             }
         }
