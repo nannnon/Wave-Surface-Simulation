@@ -42,7 +42,11 @@ public class SimulatorController : MonoBehaviour
         m_wsc = GameObject.Find("WaveSurface").GetComponent<WaveSurfaceController>();
         m_units = new Unit[kWidth, kHeight];
         m_waveSources = new List<WaveSource>();
+        Initialize();
+    }
 
+    public void Initialize()
+    {
         for (int i = 0; i < kWidth; ++i)
         {
             for (int j = 0; j < kHeight; ++j)
@@ -55,14 +59,16 @@ public class SimulatorController : MonoBehaviour
 
         for (int i = 0; i < kWidth; ++i)
         {
-            m_units[i,           0].bt = BlockType.Fixed;
+            m_units[i, 0].bt = BlockType.Fixed;
             m_units[i, kHeight - 1].bt = BlockType.Fixed;
         }
         for (int j = 0; j < kHeight; ++j)
         {
-            m_units[         0, j].bt = BlockType.Fixed;
+            m_units[0, j].bt = BlockType.Fixed;
             m_units[kWidth - 1, j].bt = BlockType.Fixed;
         }
+
+        m_waveSources.Clear();
     }
 
     void Update()
