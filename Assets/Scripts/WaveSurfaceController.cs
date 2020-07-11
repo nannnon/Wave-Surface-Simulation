@@ -71,6 +71,21 @@ public class WaveSurfaceController : MonoBehaviour
 
         var meshFilter = GetComponent<MeshFilter>();
         meshFilter.sharedMesh = m_mesh;
+
+        // コライダーを合わせる
+        var collider = GetComponent<BoxCollider>();
+
+        Vector3 center = new Vector3(
+            kWidth / 2f,
+            0,
+            kHeight / 2f);
+        collider.center = center;
+
+        Vector3 size = new Vector3(
+            kWidth * kGap,
+            0.1f,
+            kHeight * kGap);
+        collider.size = size;
     }
 
     // Update is called once per frame
