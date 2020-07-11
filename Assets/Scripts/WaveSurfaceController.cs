@@ -65,12 +65,21 @@ public class WaveSurfaceController : MonoBehaviour
             m_colors[i] = Color.white;
         }
 
+        // 法線
+        var normals = new Vector3[kWidth * kHeight];
+        for (int i = 0; i < kWidth * kHeight; ++i)
+        {
+            normals[i] = Vector3.up;
+        }
+
         m_mesh.vertices = m_vertices;
         m_mesh.triangles = triangles;
         m_mesh.colors = m_colors;
+        m_mesh.normals = normals;
 
         var meshFilter = GetComponent<MeshFilter>();
         meshFilter.sharedMesh = m_mesh;
+
 
         // コライダーを合わせる
         var collider = GetComponent<BoxCollider>();
@@ -109,5 +118,6 @@ public class WaveSurfaceController : MonoBehaviour
     {
         m_mesh.vertices = m_vertices;
         m_mesh.colors = m_colors;
+        m_mesh.RecalculateNormals();
     }
 }
